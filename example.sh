@@ -1,6 +1,7 @@
 #!/bin/bash
 arrowkey | while read -r -n 1 c; do
     d=$(LC_TYPE=C printf '%d\n' "'$c")
+    # this lookup array indexes special keys for X
     declare -A keys=( ["\\"]="backslash" ["!"]="exclam" ["~"]="asciitilde"
         ["\`"]="quoteleft" ["@"]="ampersand" ["#"]="numbersign" ["$"]="dollar"
         ["%"]="percent" ["^"]="asciicircum" ["&"]="ampersand" ["*"]="asterisk"
@@ -17,6 +18,5 @@ arrowkey | while read -r -n 1 c; do
     elif [ "${keys[$c]}" != "" ]; then
         c="${keys[$c]}"
     fi
-    echo "$c"
-    # xdotool search Firefox keydown "$c" keyup "$c"
+    xdotool search Firefox keydown "$c" keyup "$c"
 done
