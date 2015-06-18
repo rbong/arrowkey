@@ -1,5 +1,5 @@
 #!/bin/bash
-./arrowkey | while read -r -n 1 c; do
+arrowkey | while read -r -n 1 c; do
 d=$(LC_TYPE=C printf '%d\n' "'$c")
 if [ "$d" == "8" ]; then
     c="BackSpace"
