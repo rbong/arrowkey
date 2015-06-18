@@ -8,8 +8,8 @@ This can be changed in the source file.
 
 # dependencies
 
--SDL
--SDL\_ttf
+- SDL
+- SDL\_ttf
 
 # installation
 
