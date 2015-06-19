@@ -80,7 +80,7 @@ int draw_keyboard (void)
 {
     int xstep = width/cols;
     int ystep = height/rows;
-    int pad = ((width > height) ? width : height)/100;
+    int pad = ((width > height) ? width : height)/200;
     int xstart = (width - xstep * cols)/2;
     int ystart = (height - ystep * rows)/2;
     int w;
@@ -92,15 +92,36 @@ int draw_keyboard (void)
     int color;
     int jwidth;
     float x, y;
-    char s [6];
+    char s [10];
+    clear (screen);
     for (i = 0; i < rows; i++)
     {
         for (j = 0, joff = 0; j + joff < cols; j++)
         {
             if (j == cursor[_X] && i == cursor[_Y])
-                color = 0x888888;
+            {
+                if (keys [i][j] == '\2' && iscaps)
+                {
+                    if (iscaps == 1)
+                        color = 0xA8A8B0;
+                    if (iscaps == 2)
+                        color = 0x9898A0;
+                }
+                else
+                    color = 0xB0B0B8;
+            }
             else
-                color = 0xFFFFFF;
+            {
+                if (keys [i][j] == '\2' && iscaps)
+                {
+                    if (iscaps == 1)
+                        color = 0xB8B8C0;
+                    if (iscaps == 2)
+                        color = 0xA8A8B0;
+                }
+                else
+                    color = 0xCCCCD0;
+            }
             switch (keys [i][j])
             {
                 case '\1':
@@ -109,9 +130,9 @@ int draw_keyboard (void)
                     break;
                 case '\2':
                     if (iscaps == 1)
-                        strcpy (s, "CapLk");
+                        strcpy (s, "Shift");
                     else if (iscaps == 2)
-                        strcpy (s, "NoCap");
+                        strcpy (s, "Caps");
                     else
                         strcpy (s, "Shift");
                     jwidth = 2;
@@ -137,7 +158,7 @@ int draw_keyboard (void)
             x = (j + joff) * xstep + off + xstart;
             y = i * ystep + off + ystart;
             rect (screen, x, y, w, h, color);
-            text (s, x + w/2 - fontsize*(strlen(s))/4, y + h/2 - fontsize/2);
+            text (s, x + w/2, y + h/2);
             joff += jwidth - 1;
         }
     }
@@ -152,7 +173,7 @@ int draw_keyboard (void)
 
 void clear (SDL_Surface *sur)
 {
-    SDL_FillRect (sur, NULL, 0);
+    SDL_FillRect (sur, NULL, 0xEEEEEE);
 }
 
 void rect (SDL_Surface *sur, float x, float y, float w, float h, int color)
@@ -168,7 +189,7 @@ void rect (SDL_Surface *sur, float x, float y, float w, float h, int color)
 int text (char* s, int x, int y)
 {
     SDL_Surface* sur = NULL;
-    SDL_Color color = { 0, 0, 0 };
+    SDL_Color color = { 0xFF, 0xFF, 0xFF };
     SDL_Rect offset;
     sur = TTF_RenderText_Solid (font, s, color);
     if (sur == NULL)
@@ -176,8 +197,8 @@ int text (char* s, int x, int y)
         fprintf (stderr, "%s: %s\n", prog, TTF_GetError ());
         return 1;
     }
-    offset.x = x;
-    offset.y = y;
+    offset.x = x - sur->w/2;
+    offset.y = y - sur->h/2;
     if (SDL_BlitSurface (sur, NULL, screen, &offset) < 0)
     {
         fprintf (stderr, "%s: %s\n", prog, TTF_GetError ());
@@ -331,8 +352,8 @@ void finish (void)
 int main (int argc, const char **argv)
 {
     int status = 0;
-    width = 800;
-    height = 300;
+    width = 1040;
+    height = 400;
     status = start ();
     if (status)
     {
