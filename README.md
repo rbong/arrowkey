@@ -1,6 +1,6 @@
 # arrowkey
 
-![screen](https://raw.github.com/rbong/arrowkey/master/img/screen.png)
+![fullscreen-mode](https://raw.github.com/rbong/arrowkey/master/img/screen.png)
 
 arrowkey is a quick SDL/C program written as a virtual keyboard for remotes.
 An example of piping its output using xdotool can be found in example.sh
