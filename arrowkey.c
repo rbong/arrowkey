@@ -57,7 +57,7 @@ int start (void)
         return 1;
     }
     putenv(strdup("SDL_VIDEO_CENTERED=1"));
-    screen = SDL_SetVideoMode (width, height, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    screen = SDL_SetVideoMode (width, height, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_NOFRAME);
     SDL_WM_SetCaption (prog, NULL);
     if (SDL_Flip (screen) == -1)
     {
