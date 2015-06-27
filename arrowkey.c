@@ -16,6 +16,7 @@ TTF_Font* font = NULL;
 int rows = 5;
 int cols = 13;
 
+// \3 is bs, \1 is cr, \2 is shift, \4 is space, and \5 is caps
 const char* keys[] = { "`1234567890-=",
                        "qwertyuiop/\3",
                        "asdfghjkl;'\1",
@@ -72,7 +73,7 @@ int start (void)
         finish ();
         return 1;
     }
-    font = TTF_OpenFont ("/usr/share/fonts/TTF/DejaVuSans.ttf", fontsize);
+    font = TTF_OpenFont (FONT, fontsize);
     return 0;
 }
 
@@ -103,24 +104,24 @@ int draw_keyboard (void)
                 if (keys [i][j] == '\2' && iscaps)
                 {
                     if (iscaps == 1)
-                        color = 0xA8A8B0;
+                        color = SHIF_HI;
                     if (iscaps == 2)
-                        color = 0x9898A0;
+                        color = CAPS_HI;
                 }
                 else
-                    color = 0xB0B0B8;
+                    color = KEYS_HI;
             }
             else
             {
                 if (keys [i][j] == '\2' && iscaps)
                 {
                     if (iscaps == 1)
-                        color = 0xB8B8C0;
+                        color = SHIF_NH;
                     if (iscaps == 2)
-                        color = 0xA8A8B0;
+                        color = CAPS_NH;
                 }
                 else
-                    color = 0xCCCCD0;
+                    color = KEYS_NH;
             }
             switch (keys [i][j])
             {
@@ -173,7 +174,7 @@ int draw_keyboard (void)
 
 void clear (SDL_Surface *sur)
 {
-    SDL_FillRect (sur, NULL, 0xEEEEEE);
+    SDL_FillRect (sur, NULL, BCKGRND);
 }
 
 void rect (SDL_Surface *sur, float x, float y, float w, float h, int color)
@@ -189,7 +190,7 @@ void rect (SDL_Surface *sur, float x, float y, float w, float h, int color)
 int text (char* s, int x, int y)
 {
     SDL_Surface* sur = NULL;
-    SDL_Color color = { 0xFF, 0xFF, 0xFF };
+    SDL_Color color = FONT_CL;
     SDL_Rect offset;
     sur = TTF_RenderText_Solid (font, s, color);
     if (sur == NULL)
@@ -219,7 +220,7 @@ int poll_sdl (void)
             int key = event.key.keysym.sym;
             switch (key)
             {
-                case SDLK_ESCAPE:
+                case SDLK_ESCAPE: case SDLK_RETURN:
                     return 1;
                     break;
                 case SDLK_UP:
@@ -237,6 +238,9 @@ int poll_sdl (void)
                 case SDLK_RIGHT:
                     cursor_x (+1);
                     draw_keyboard ();
+                    break;
+                case SDLK_BACKSPACE:
+                    printf ("\b");
                     break;
                 case SDLK_SPACE:
                     switch (keys [cursor[_Y]][cursor[_X]])
